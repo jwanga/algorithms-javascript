@@ -1,4 +1,4 @@
-const LinkedList = require('./linked-lists');
+const LinkedList = require('./linked-list');
 const { assert } = require('./utilities');
 
 /**
