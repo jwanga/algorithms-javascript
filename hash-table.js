@@ -1,5 +1,4 @@
 const LinkedList = require('./linked-list');
-const { assert } = require('./utilities');
 
 /**
  * A hashtable is a data structure that allows Insert, Delete and Search operations in O(1) time.
@@ -14,11 +13,17 @@ class HashTable {
         // this.table = this._initializeTable(length);
         this.table = new Array(length);
 
-        // The size of the table.
-        this.length = this.table.length;
-
-        //the number of items in the array
+        // The number of items in the array
         this.itemCount = 0;
+
+        // The factor by which we grow and shrink the table.
+        this._growthFactor = 2;
+
+        // The load factor threshold for growing the table;
+        this._growthLoadFactorThreshold = 0.75;
+
+        // The load factor threshold for shrinking the table;
+        this._shrinkLoadFactorThreshold = 0.25;
     }
 
     /**
@@ -40,7 +45,7 @@ class HashTable {
      * return {number}
      */
     _getLoadFactor() {
-        return this.itemCount / this.length;
+        return this.itemCount / this.getLength();
     }
 
     /**
@@ -56,7 +61,7 @@ class HashTable {
         const sum = charCodes.reduce((previous, current) => previous + current, 0);
 
         // Modulo the sum of the char codes to get a number withing the array range.
-        return sum % this.length;
+        return sum % this.getLength();
     }
 
     /**
@@ -65,7 +70,49 @@ class HashTable {
      * @returns {number} - The hashed value of the key corresponding to an array index.
      */
     _hashNumber(key) {
-        return  key % this.length;
+        return  key % this.getLength();
+    }
+
+    /**
+     * grow the table when the load factor reaches a threshhold.
+     */
+    _growTable(){
+        if(this._getLoadFactor() >= this._growthLoadFactorThreshold) {
+            const oldTable = [...this.table];
+            const newTableSize = this.getLength() * this._growthFactor;
+            this.table = new Array(newTableSize);
+            this._rehash(oldTable)
+        } 
+    }
+
+    /**
+     * Shrink the table when the load factor reaches a threshhold.
+     */
+    _shrinkTable() {
+        if(this._getLoadFactor() <= this._shrinkLoadFactorThreshold) {
+            const oldTable = [...this.table];
+            const newTableSize = Math.ceil(this.getLength() / this._growthFactor);
+            this.table = new Array(newTableSize);
+            this._rehash(oldTable)
+        }
+    }
+
+    /**
+     * Iterates through the old table and rehashes each item into the resized table.
+     * @param {array} oldTable 
+     */
+    _rehash(oldTable) {
+        //reset item count before rehashing.
+        this.itemCount = 0;
+        for(let i = 0; i < oldTable.length; i++) {
+            if(oldTable[i]) {
+                let node = oldTable[i].head;
+                while(node) {
+                    this.insert(node.key, node.value);
+                    node = node.next;
+                }
+            }
+        }
     }
 
     /**
@@ -73,7 +120,7 @@ class HashTable {
      * @param {any} key - The key to be hashed
      * @returns {number} - The hashed value of the key corresponding to an array index.
      */
-    hash(key) {
+    _hash(key) {
         let value;
 
         switch(typeof(key)){
@@ -90,35 +137,44 @@ class HashTable {
     }
 
     /**
+     * Returns the length of the table.
+     * @returns {number} The length of the table.
+     */
+    getLength() {
+        return this.table.length;
+    }
+
+    /**
      * Inserts the value into the table indexed by the passed key
      * @param {any} key 
      * @param {any} value 
      */
     insert(key, value) {
-        const hashedKey = this.hash(key);
+        const hashedKey = this._hash(key);
 
         // Insert a new linked list if the index is empty otherwise append a new node to the list;
         if(!this.table[hashedKey]){
-            this.table[hashedKey] = new LinkedList(key, value);;
+            this.table[hashedKey] = new LinkedList(key, value);
         } else {
-            this.table[hashedKey].appendToEnd(key, value);
+            this.table[hashedKey].append(this.table[hashedKey].tail, key, value);
         }
         this.itemCount++;
+
+        this._growTable();
+
     }
 
     /**
      * Retrieves the value of the passed key.
-     * @param {*} key 
+     * @param {*} key - The key to search for.
+     * @return {*} The value of the passed key.
      */
     search(key) {
-        const hashedKey = this.hash(key);
-        let node = this.table[hashedKey]
-
-        // traverse the linked list until you find a matching key.
-        while(node && node.key !== key){
-            node = node.next;
-        }
-        return node ? node.value : undefined;
+        const hashedKey = this._hash(key);
+        let linkedList = this.table[hashedKey]
+        // Search the linked list for the key.
+        const node = linkedList ? linkedList.search(key) : null
+        return node ? node.value : node;
     }
 
     /**
@@ -126,18 +182,18 @@ class HashTable {
      * @param {*} key 
      */
     delete(key) {
-        const hashedKey = this.hash(key);
-        let node = this.table[hashedKey];
+        const hashedKey = this._hash(key);
+        const linkedList = this.table[hashedKey];
+        if(linkedList) {
+            const node = linkedList.search(key);
 
-        // traverse the linked list until you find a matching key.
-        while(node && node.key !== key){
-            node = node.next;
+            if (node) {
+                linkedList.delete(node);
+                this.itemCount--;
+            }
         }
 
-        if(node){
-            this.table[hashedKey] = node.delete();
-            this.itemCount--;
-        }
+        this._shrinkTable();
     }
 
     toString(){
@@ -146,25 +202,3 @@ class HashTable {
 }
 
 module.exports = HashTable;
-
-hashTable = new HashTable(5);
-hashTable.insert(0, 'foo');
-hashTable.insert(7, 'is heaven');
-
-//The following entries collide.
-hashTable.insert('abc', 'value1');
-hashTable.insert('cba', 'value2');
-hashTable.insert('bca', 'value3');
-
-//console.log(hashTable.table[0])
-//assert('The table should contain a node with the key "abc"', hashTable.table[0].search('abc'), 'value1');
-
-
-hashTable.delete('abc');
-
-const searchKey = 'abc';
-
-// console.log(`Length: ${hashTable.length}`);
-// console.log(`Load Factor: ${hashTable._getLoadFactor()}`);
-// console.log(`Search for : ${searchKey} = ${hashTable.search(searchKey)}`);
-console.log(hashTable.toString());

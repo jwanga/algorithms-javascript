@@ -5,7 +5,8 @@ console.log("Linked List should:");
 
 const linkedList = new LinkedList('key1', 'value1');
 assert('initialize with a single node.', true, () => 
-    linkedList.head.key === 'key1'
+    linkedList.length === 1
+    && linkedList.head.key === 'key1'
     && linkedList.head.value === 'value1'
     && linkedList.head.previous === null
     && linkedList.head.next === null
@@ -16,23 +17,40 @@ assert('search for a node with a given key', 'value1', node1.value);
 
 const node2 = linkedList.append(linkedList.tail, 'key2', 'value2');
 assert('append to the end of the linked list', true, () => 
-    linkedList.tail.key === 'key2' 
+    linkedList.length === 2
+    && linkedList.tail.key === 'key2' 
     && linkedList.tail.value === 'value2'
     && linkedList.tail.previous === node1
     && linkedList.tail.previous.next === linkedList.tail);
 
 const node3 = linkedList.prepend(linkedList.head, 'key3', 'value3');
 assert('append to the beginning of the linked list', true, () => 
-    linkedList.head.key === 'key3' 
+    linkedList.length === 3
+    && linkedList.head.key === 'key3' 
     && linkedList.head.value === 'value3'
     && linkedList.head.previous === null
     && linkedList.head.next.previous === linkedList.head);
 
 const node4 = linkedList.append(node1, 'key4', 'value4');
-assert('append to node1', true, () => 
-    node4.key === 'key4'
+assert('append to another node', true, () => 
+    linkedList.length === 4
+    && node4.key === 'key4'
     && node4.value === 'value4'
     && node4.previous === node1
     && node4.next === node2
     && node1.next === node4
     && node2.previous === node4);
+
+linkedList.append(linkedList.tail, 'key5', 'value5');
+linkedList.append(linkedList.tail, 'key6', 'value6');
+linkedList.append(linkedList.tail, 'key7', 'value7');
+linkedList.append(linkedList.tail, 'key8', 'value8');
+linkedList.append(linkedList.tail, 'key9', 'value9');
+
+linkedList.delete(node4);
+const deletedNode = linkedList.search('key4')
+assert('delete a node from the list', true, () => 
+    linkedList.length === 8
+    && deletedNode === null
+    && node1.next === node2
+    && node2.previous === node1);

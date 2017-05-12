@@ -10,6 +10,7 @@ class LinkedList {
     constructor(key = null, value = null) {
         this.head = new LinkedListNode(key, value);
         this.tail = this.head;
+        this.length = 1;
     }
 
      /**
@@ -37,6 +38,8 @@ class LinkedList {
 
         node.next = newNode;
 
+        this.length++;
+
         return newNode;
     }
 
@@ -60,19 +63,29 @@ class LinkedList {
         newNode.next = node;
         node.previous = newNode;
 
+        this.length++;
+
         return newNode;
     }
 
+    /**
+     * Deletes the passed node from the list.
+     * @param {*} node - The node to delete.
+     */
     delete(node){
-
         if(node.previous){
             node.previous.next = node.next;
         } else {
-           this.head = node;
+           this.head = node.next;
         }
+
         if(node.next) {
             node.next.previous = node.previous;
+        } else {
+            this.tail = node.previous
         }
+
+        this.length--;
     }
 
     /**

@@ -1,1 +1,5 @@
-const LinkedList = require('./linked-list-tests');
+console.log('\nRunning Tests.......')
+
+require('./linked-list-tests');
+require('./hash-table-tests');
+
