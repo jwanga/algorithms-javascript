@@ -102,6 +102,7 @@
         "no-bitwise": "error",
         "no-caller": "error",
         "no-catch-shadow": "error",
+        "no-console" :"off",
         "no-compare-neg-zero": "error",
         "no-confusing-arrow": "error",
         "no-continue": "error",

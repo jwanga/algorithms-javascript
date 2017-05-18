@@ -12,3 +12,25 @@ module.exports.assert = (description, expected, actual) => {
         console.error('\x1b[31m', `FAILED: ${results}`, colorReset);
     }
 }
+
+/**
+ * Instruments the passed callback
+ * @param {string} description - A description of the function to be instrumented.
+ * @param {function} callback - The function to be instrumented.
+ */
+module.exports.instrument = (description, callback) => {
+    const startTime = Date.now();
+    let endTime = 0;
+    let runTime = 0;
+
+    const result = Reflect.apply(callback, null, []);
+
+    endTime = Date.now();
+    runTime = endTime - startTime;
+
+    const displayTime = runTime > 1000 ? `${runTime / 1000} seconds` : `${runTime} milliseconds`
+
+    console.log(`Executed ${description} in ${displayTime}`);
+
+    console.log(`Result: ${result}`);
+}
