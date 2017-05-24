@@ -1,5 +1,3 @@
-const { assert } = require('./utilities');
-
 /**
  * A linked list is a data structure in which each node contains a reference to the next and previous nodes.
  * Insert - O(1)
