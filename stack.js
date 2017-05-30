@@ -17,7 +17,7 @@ class Stack {
     push(item) {
 
         if(item !== null && typeof(item) !== 'undefined') {
-            this.list.prepend(this.list.head, null, item);
+            this.list.prepend(null, item, this.list.head);
         } else {
             throw new TypeError('Cannot insert a null item')
         }
@@ -41,7 +41,7 @@ class Stack {
      * @return {*} - The item at the top of the stack
      */
     peek(){
-        const item = this.list.head.value;
+        const item = this.list.head ? this.list.head.value : null;
         return item;
     }
 }

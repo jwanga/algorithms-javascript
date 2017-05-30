@@ -5,36 +5,40 @@
  * Search - O(n)
  */
 class LinkedList {
-    constructor(key = null, value = null) {
-        this.head = new LinkedListNode(key, value);
-        this.tail = this.head;
-        this.length = 1;
+    constructor() {
+        this.length = 0;
     }
 
      /**
      * Apppends the passed node after the current node.
-     * @param {LinkedListNode} node - The node to be appended onto
      * @param {*} key - The key of the appended node.
      * @param {*} value - The value of the appended node.
+     * @param {LinkedListNode} node - The node to be appended onto
      * @return {LinkedListNode} The appended node.
      */
-    append(node, key, value) {
+    append(key, value, node) {
         const newNode =  new LinkedListNode(key, value);
-        
-        // If there is no next then this node is the new tail.
-        if(node.next){
-            newNode.next = node.next;
-        } else {
+
+        if(!node && !this.head && !this.tail) {
+            this.head = newNode;
             this.tail = newNode;
-        }
-
-        newNode.previous = node;
+        } else {
         
-        if(node.next) {
-            node.next.previous = newNode;
-        }
+            // If there is no next then this node is the new tail.
+            if(node.next){
+                newNode.next = node.next;
+            } else {
+                this.tail = newNode;
+            }
 
-        node.next = newNode;
+            newNode.previous = node;
+            
+            if(node.next) {
+                node.next.previous = newNode;
+            }
+
+            node.next = newNode;
+        }
 
         this.length++;
 
@@ -43,26 +47,31 @@ class LinkedList {
 
      /**
      * Prepends the passed node before the current node.
-     * @param {LinkedListNode} node - The node to be prepended onto
      * @param {*} key - The key of the preppended node.
      * @param {*} value - The value of the preppended node.
+     * @param {LinkedListNode} node - The node to be prepended onto
      * @return {LinkedListNode} The prepended node.
      */
-    prepend(node, key, value) {
+    prepend(key, value, node) {
         const newNode = new LinkedListNode(key, value);
 
-        // If there is no previous then this node is the new head.
-        if(node.previous){
-            newNode.previous = node.previous
-        } else {
+         if(!node && !this.head && !this.tail) {
             this.head = newNode;
+            this.tail = newNode;
+        } else {
+
+            // If there is no previous then this node is the new head.
+            if(node.previous){
+                newNode.previous = node.previous
+            } else {
+                this.head = newNode;
+            }
+            newNode.previous = node.previous
+            newNode.next = node;
+            node.previous = newNode;
+
+            this.length++;
         }
-        newNode.previous = node.previous
-        newNode.next = node;
-        node.previous = newNode;
-
-        this.length++;
-
         return newNode;
     }
 

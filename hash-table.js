@@ -154,9 +154,11 @@ class HashTable {
 
         // Insert a new linked list if the index is empty otherwise append a new node to the list;
         if(!this.table[hashedKey]){
-            this.table[hashedKey] = new LinkedList(key, value);
+            const newLinkedList = new LinkedList();
+            newLinkedList.append(key, value);
+            this.table[hashedKey] = newLinkedList;
         } else {
-            this.table[hashedKey].append(this.table[hashedKey].tail, key, value);
+            this.table[hashedKey].append(key, value, this.table[hashedKey].tail);
         }
         this.itemCount++;
 
