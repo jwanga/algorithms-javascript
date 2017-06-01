@@ -4,13 +4,36 @@
  * All Trees have a single root node.
  */
 class Tree {
+
   /**
    * @param {number} numberOfChildren - The number of children per node
    * @param {*} value - The value of the root node.
    */
-  constructor(numberOfChildren, value) {
+  constructor(numberOfChildren) {
     this.numberOfChildren = numberOfChildren;
-    this.root = value ? new TreeNode(this.numberOfChildren, value) : null;
+    this.root = null;
+  }
+
+  /**
+   * Inserts a value into the tree.
+   * @param {*} value - The value to be inserted.
+   */
+  insert(value) {
+    if (!this.root){
+      this.root = new TreeNode(this.numberOfChildren, value);
+    }
+    this.root.insert(value);
+  }
+
+  /**
+   * Prints the current node then prints the children left to right.
+   */
+  preOrderTraversal() {
+    if(this.root) {
+      this.root.preOrderTraversal();
+    } else {
+      throw new Error('The tree is empty');
+    }
   }
   
 }
@@ -29,12 +52,22 @@ class TreeNode {
   }
 
   /**
-   * Inserts a node an a child of this node
-   * @param {*} value - the node to be inserted
+   * Inserts a value into this node.
+   * @param {*} value - The value to be inserted
    */
   insert(value) {
+    
+  }
 
+  /**
+   * Prints the current node then prints the children left to right.
+   */
+  preOrderTraversal() {
   }
 }
 
-module.exports = Tree;
+module.exports = { 
+  Tree, 
+  TreeNode
+} ;
+
