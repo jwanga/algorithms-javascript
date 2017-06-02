@@ -49,6 +49,10 @@ class Queue {
         const item = this.list.head ? this.list.head.value : null;
         return item;
     }
+
+    isEmpty() {
+        return this.list.head === null;
+    }
 }
 
 module.exports = Queue
