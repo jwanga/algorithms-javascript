@@ -13,7 +13,7 @@ class Tree {
    */
   constructor(numberOfChildren) {
     this.numberOfChildren = numberOfChildren;
-    this.root = null;
+    this.root = undefined;
   }
 
   /**
@@ -26,6 +26,15 @@ class Tree {
     } else {
       this.root.insert(value);
     }
+  }
+
+  /**
+   * Serach the tree for a value;
+   * @param {*} value -The value to search for
+   * @return {*} The found value;
+   */
+  search(value) {
+    return this.root.search ? this.root.search(value) : undefined;
   }
 
    /**
@@ -80,18 +89,6 @@ class TreeNode {
     this.children = children.fill(null);
   }
 
-  _search() {
-    const queue = new Queue();
-    queue.add(this);
-
-    while(queue.isEmpty()) {
-      const node = queue.remove();
-      this.children.forEach(child => {
-        console.log(child.value);
-      })
-    }
-  }
-
   /**
    * Gets the child values of n-ary trees
    * @param {string} traversal - the type of traversal to be performed.
@@ -137,6 +134,38 @@ class TreeNode {
         break;
       }
     }
+  }
+
+  /**
+   * Serach the tree for a value;
+   * @param {*} value -The value to search for
+   * @return {*} The found value;
+   */
+  search(value) {
+    // In order to insert a value we havr to perform a breadth first search for 
+    // an open child with a null value.
+    const queue = new Queue();
+    queue.add(this);
+    let inserted = false;
+
+    // visit each element being added to the queue.
+    while(!queue.isEmpty()) {
+      const node = queue.remove();
+      let i = 0;
+
+      //add the children of the dequeued node to the queue if they are not null
+      while(node.children[i] && node.children[i].value !== value && i < node.children.length ){
+        queue.add(node.children[i]);
+        i++;
+      }
+
+      //If the child node is null then ad a new node there and exit the loop.
+      if(node.children[i] && node.children[i].value === value){
+        return node.children[i].value;
+      }
+    }
+
+    return undefined;
   }
 
   /**

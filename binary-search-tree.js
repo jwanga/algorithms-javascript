@@ -45,6 +45,10 @@ class BinarySearchTreeNode extends TreeNode {
             throw new TypeError('Duplicate values are not allowed in a binary search tree')
         }
     }
+
+    search(){
+        return this.value;
+    }
 }
 
 module.exports = { BinarySearchTree, BinarySearchTreeNode };

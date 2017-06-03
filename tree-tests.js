@@ -5,7 +5,7 @@ console.log("Tree should:");
 
 const tree = new Tree(3);
 
-assert('initialize with an empty root', null, tree.root); 
+assert('initialize with an empty root', undefined, tree.root); 
 
 tree.insert(1);
 tree.insert(2);
@@ -20,6 +20,8 @@ tree.insert(10);
 
 assert('return a preorder traversal', [1, 2, 5, 6, 7, 3, 8, 9, 10, 4].toString(), tree.preOrderTraversal().toString()); 
 assert('return a postorder traversal', [5, 6, 7, 2, 8, 9, 10, 3, 4, 1].toString(), tree.postOrderTraversal().toString());
+assert('search for a value in the tree', 5, tree.search(5));
+assert('search for a value not in the tree', undefined, tree.search(27));
 
 const binaryTree = new Tree(2);
 binaryTree.insert(1);
