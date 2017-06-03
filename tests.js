@@ -5,3 +5,4 @@ require('./hash-table-tests');
 require('./stack-tests');
 require('./queue-tests');
 require('./tree-tests');
+require('./binary-search-tree-tests');
