@@ -1,5 +1,6 @@
 
 const Queue = require('./queue');
+
 /**
  * A Tree is a datastructure composed of nodes that may themselves contain child nodes.
  * All Trees have a single root node.
@@ -27,8 +28,22 @@ class Tree {
     }
   }
 
+   /**
+   * Gets the left node, then the current node then the right node.
+   * @return {Array} A in ordered array of thre values.
+   */
+  inOrderTraversal() {
+    if(!this.root) {
+      throw new TypeError('The tree is empty');
+    } else if(this.numberOfChildren !== 2) {
+      throw new TypeError('You can only perform an in-order traversal of a binary tree')
+    } else {
+      return this.root.inOrderTraversal();
+    }
+  }
+
   /**
-   * Gets the current node then prints the children left to right.
+   * Gets the current node then gets the children left to right.
    * @return {Array} A pre ordered array of thre values.
    */
   preOrderTraversal() {
@@ -50,7 +65,6 @@ class Tree {
       throw new Error('The tree is empty');
     }
   }
-  
 }
 
 /**
@@ -79,16 +93,16 @@ class TreeNode {
   }
 
   /**
-   * Gets the child values
-   * @param {boolean} isPreOrder - true if performing a pre-order traversal. 
+   * Gets the child values of n-ary trees
+   * @param {string} traversal - the type of traversal to be performed.
    *  False if performing a post-order traversal.
    * @return {Array} An array of the child values
    */
-  _traverse(isPreOrder) {
+  _traverse(traversal) {
     let values = []; 
     this.children.forEach( child => {
       if(child) {
-        values = [ ...values, ...(isPreOrder ? child.preOrderTraversal() : child.postOrderTraversal()) ];
+        values = [ ...values, ...child[traversal]() ];
       }
     });
     return values
@@ -126,11 +140,11 @@ class TreeNode {
   }
 
   /**
-   * Gets the current node then prints the children left to right.
+   * Gets the current node then gets the children left to right.
    * @return {Array} A pre ordered array of thre values.
    */
   preOrderTraversal() {
-    return [ this.value, ...this._traverse(true)]; 
+    return [ this.value, ...this._traverse('preOrderTraversal')]; 
   }
 
   /**
@@ -138,7 +152,18 @@ class TreeNode {
    * @return {Array} A post ordered array of thre values.
    */
   postOrderTraversal() {
-    return [ ...this._traverse(false), this.value]; 
+    return [ ...this._traverse('postOrderTraversal'), this.value]; 
+  }
+
+  /**
+   * Gets the left node, then the current node then the right node.
+   * @return {Array} A in ordered array of thre values.
+   */
+  inOrderTraversal() {
+    const leftTraversal = this.children[0] ? this.children[0].inOrderTraversal() : [];
+    const rightTraversal = this.children[1] ? this.children[1].inOrderTraversal() : [];
+    //console.log(traversal, this.value)
+    return [ ...leftTraversal, this.value, ...rightTraversal];
   }
 }
 

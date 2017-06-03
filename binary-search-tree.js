@@ -1,9 +1,9 @@
 const { Tree } = require('./tree');
 
-class BinaryTree extends Tree {
+class BinarySearchTree extends Tree {
     constructor() {
         super(2);
     }
 }
 
-module.exports = { BinaryTree };
+module.exports = { BinarySearchTree };
