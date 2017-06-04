@@ -46,8 +46,18 @@ class BinarySearchTreeNode extends TreeNode {
         }
     }
 
-    search(){
-        return this.value;
+    search(value) {
+        let result;
+
+        if(value === this.value) {
+            result = this.value;
+        } else if (value < this.value && this.children[0]) {
+            result = this.children[0].search(value);
+        } else if (value > this.value && this.children[1]) {
+            result = this.children[1].search(value);
+        }
+            
+        return result
     }
 }
 

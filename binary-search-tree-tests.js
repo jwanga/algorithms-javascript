@@ -16,6 +16,8 @@ binarySearchTree.insert(7);
 binarySearchTree.insert(13);
 
 assert('return a preorder traversal', [8, 3, 1, 6, 4, 7, 10, 14, 13].toString(), binarySearchTree.preOrderTraversal().toString()); 
-// assert('return a postorder traversal', [5, 6, 7, 2, 8, 9, 10, 3, 4, 1].toString(), binarySearchTree.postOrderTraversal().toString());
-// assert('return an inorder traversal', [4, 2, 5, 1, 3].toString(), binarySearchTree.inOrderTraversal().toString()); 
+assert('return a postorder traversal', [1, 4, 7, 6, 3, 13, 14, 10, 8].toString(), binarySearchTree.postOrderTraversal().toString());
+assert('return an inorder traversal', [1, 3, 4, 6, 7, 8, 10, 13, 14].toString(), binarySearchTree.inOrderTraversal().toString()); 
+assert('search for a value in the tree', 6, binarySearchTree.search(6));
+assert('search for a value not ni the tree', undefined, binarySearchTree.search(76));
 
