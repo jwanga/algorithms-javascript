@@ -14,6 +14,7 @@ class Tree {
   constructor(numberOfChildren) {
     this.numberOfChildren = numberOfChildren;
     this.root = undefined;
+    this.Li
   }
 
   /**
