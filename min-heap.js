@@ -29,16 +29,18 @@ class MinHeap {
     }
   }
 
+  /**
+   * After a min is extracted swap the last node to the root and move it down the tree based on its children.
+   */
   _heapifyDown() {
     let currentIndex = 0;
-    console.log('foo', this.heapList, this.heapList[currentIndex], this.heapList[this._getLeftChildIndex(currentIndex)],  this.heapList[this._getRightChildIndex(currentIndex)]);
+    
+    //move the current index down the tree if it's larger than its children.
     while(
       (this.heapList[this._getLeftChildIndex(currentIndex)] < this.heapList[currentIndex] 
       || this.heapList[this._getRightChildIndex(currentIndex)] < this.heapList[currentIndex] )
       && this.heapList[this._getRightChildIndex(currentIndex)]) {
       
-      console.log('foo1', this.heapList, this.heapList[currentIndex], this.heapList[this._getLeftChildIndex(currentIndex)],  this.heapList[this._getRightChildIndex(currentIndex)]);
-     
       const currentValue = this.heapList[currentIndex];
 
       if(this.heapList[this._getLeftChildIndex(currentIndex)] < this.heapList[this._getRightChildIndex(currentIndex)]){
