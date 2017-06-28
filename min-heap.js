@@ -12,11 +12,11 @@ class MinHeap {
   }
 
   _getLeftChildIndex(currentIndex) {
-    return 2 * currentIndex;
+    return (2 * currentIndex) + 1;
   }
 
   _getRightChildIndex(currentIndex) {
-    return (2 * currentIndex) + 1;
+    return (2 * currentIndex) + 2;
   }
 
   _heapifyUp() {
@@ -29,17 +29,27 @@ class MinHeap {
     }
   }
 
-   _heapifyDown() {
+  _heapifyDown() {
     let currentIndex = 0;
+    console.log('foo', this.heapList, this.heapList[currentIndex], this.heapList[this._getLeftChildIndex(currentIndex)],  this.heapList[this._getRightChildIndex(currentIndex)]);
     while(
-      this.heapList[this._getLeftChildIndex(currentIndex)] < this.heapList[currentIndex] 
-      || this.heapList[this._getRightChildIndex(currentIndex)] < this.heapList[currentIndex] ) {
+      (this.heapList[this._getLeftChildIndex(currentIndex)] < this.heapList[currentIndex] 
+      || this.heapList[this._getRightChildIndex(currentIndex)] < this.heapList[currentIndex] )
+      && this.heapList[this._getRightChildIndex(currentIndex)]) {
+      
+      console.log('foo1', this.heapList, this.heapList[currentIndex], this.heapList[this._getLeftChildIndex(currentIndex)],  this.heapList[this._getRightChildIndex(currentIndex)]);
+     
+      const currentValue = this.heapList[currentIndex];
 
-        if()
-      const parentValue = this.heapList[this._getParentIndex(currentIndex)];
-      this.heapList[this._getParentIndex(currentIndex)] = this.heapList[currentIndex];
-      this.heapList[currentIndex] = parentValue;
-      currentIndex = this._getParentIndex(currentIndex);
+      if(this.heapList[this._getLeftChildIndex(currentIndex)] < this.heapList[this._getRightChildIndex(currentIndex)]){
+        this.heapList[currentIndex] = this.heapList[this._getLeftChildIndex(currentIndex)];
+        this.heapList[this._getLeftChildIndex(currentIndex)] = currentValue;
+        currentIndex = this._getLeftChildIndex(currentIndex);
+      } else {
+        this.heapList[currentIndex] = this.heapList[this._getRightChildIndex(currentIndex)];
+        this.heapList[this._getRightChildIndex(currentIndex)] = currentValue;
+        currentIndex = this._getRightChildIndex(currentIndex);
+      }
     }
   }
 
@@ -58,7 +68,14 @@ class MinHeap {
    */
   extract() {
     const extractedValue = this.heapList[0];
-    this.heapList[0] = this.heapList.pop();
+
+    //Only swap if there is more than 1 value left.
+    if(this.heapList.length > 1 ){
+      this.heapList[0] = this.heapList.pop();
+    } else {
+      this.heapList.pop();
+    }
+
     this._heapifyDown();
     return extractedValue;
   }
